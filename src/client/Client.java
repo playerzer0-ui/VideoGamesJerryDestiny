@@ -1,47 +1,65 @@
 package client;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import business.TCProtocol;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        String serverIP = "localhost";
-        int serverPort = 13838;
-        String message = "";
+        Scanner sc = new Scanner(System.in);
+        System.out.println("client service");
+        //setup connection
+        try(Socket socket = new Socket(TCProtocol.HOST, TCProtocol.PORT)){
+            try(Scanner input = new Scanner(socket.getInputStream()); PrintWriter output = new PrintWriter(socket.getOutputStream())){
+                boolean validSession = true;
+                String msg = "";
 
-        try (DatagramSocket clientSocket = new DatagramSocket();
-             Scanner scanner = new Scanner(System.in)) {
+                while(validSession){
+                    System.out.println("1. LOGIN (username): ");
+                    System.out.println("2. Place order: ");
+                    System.out.println("3. Cancel order: ");
+                    System.out.println("4. View orders made by you ");
+                    System.out.println("5. EXIT");
+                    String choice = sc.nextLine();
 
-            while (true) {
-                // Read user input
-                System.out.println("1. USER connect (USER%%username)");
-                System.out.println("2. ORDER game (ORDER%%title%%price%%mode)");
-                System.out.println("3. CANCEL order (CANCEL%%title%%price%%mode)");
-                System.out.println("4. VIEW all orders (VIEW)");
-                System.out.println("5. END");
-                System.out.print("> ");
-                message = scanner.nextLine();
+                    switch(choice){
+                        case "1":
 
-                // Send message to server
-                byte[] sendData = message.getBytes();
-                InetAddress serverAddress = InetAddress.getByName(serverIP);
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
-                clientSocket.send(sendPacket);
+                            break;
+                        case "2":
 
-                // Receive echoed message
-                byte[] receiveBuffer = new byte[1024];
-                DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-                clientSocket.receive(receivePacket);
+                            break;
+                        case "3":
 
-                // Display response
-                String response = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                System.out.println("received: " + response);
+                            break;
+                        case "4":
+
+                            break;
+                        case "5":
+
+                            break;
+                    }
+
+                    output.println(msg);
+                    output.flush();
+
+                    String response = input.nextLine();
+                    System.out.println("message recieved: " + response);
+
+                    if(response.equals(TCProtocol.EXIT)){
+                        validSession = false;
+                    }
+                }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch(UnknownHostException e){
+            System.out.println("Host cannot be found at this moment. Try again later");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

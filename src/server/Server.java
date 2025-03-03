@@ -1,55 +1,62 @@
 package server;
 
+import business.OrderList;
+import business.TCProtocol;
+import business.UserList;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.BindException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.List;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class Server {
     public static void main(String[] args) {
-        int port = 13838; // Echo service port
-        String msg = "null";
+        System.out.println("server is online");
+        try(ServerSocket serverSocket = new ServerSocket(TCProtocol.PORT)){
 
-        try (DatagramSocket serverSocket = new DatagramSocket(port)) {
-            System.out.println("Echo Server is running on port " + port);
+            while(true){
+                Socket socket = serverSocket.accept();
+                boolean validSession = true;
+                UserList userList = new UserList();
+                OrderList orderList = new OrderList();
 
-            byte[] buffer = new byte[1024];
+                try(Scanner input = new Scanner(socket.getInputStream()); PrintWriter output = new PrintWriter(socket.getOutputStream())){
 
-            while (true) {
-                // Receive packet
-                DatagramPacket receivedPacket = new DatagramPacket(buffer, buffer.length);
-                serverSocket.receive(receivedPacket);
+                    while(validSession){
+                        String request = input.nextLine();
+                        String[] components = request.split(TCProtocol.DELIMITER);
+                        String response = "";
 
-                // Extract message and sender's details
-                String receivedMessage = new String(receivedPacket.getData(), 0, receivedPacket.getLength());
-                InetAddress senderAddress = receivedPacket.getAddress();
-                int senderPort = receivedPacket.getPort();
+                        switch (components[0]){
+                            case TCProtocol.USER:
 
-                System.out.println("Received from " + senderAddress + ":" + senderPort + " -> " + receivedMessage);
-                String[] msgArr = receivedMessage.split("%%");
+                                break;
+                            case TCProtocol.ORDER:
 
-//                switch(msgArr[0]){
-//                    case "ADD":
-//                        break;
-//                    case "REMOVE":
-//                        break;
-//                    case "SEARCH":
-//                        break;
-//                    case "DISPLAY":
-//                        break;
-//                }
+                                break;
+                            case TCProtocol.CANCEL:
 
-                // Echo message back to sender
-                byte[] responseData = msg.getBytes();
-                DatagramPacket responsePacket = new DatagramPacket(responseData, responseData.length, senderAddress, senderPort);
-                serverSocket.send(responsePacket);
+                                break;
+                            case TCProtocol.VIEW:
+                                break;
+                            case TCProtocol.END:
+                                break;
+                        }
+
+                        output.println(response);
+                        output.flush();
+                    }
+                }
             }
-        } catch (BindException e){
-            System.out.println("port number error");
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (BindException e) {
+            System.out.println("BindException occurred when attempting to bind to port " + 12321);
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException occurred on server socket");
+            System.out.println(e.getMessage());
         }
     }
 }
