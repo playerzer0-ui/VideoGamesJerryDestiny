@@ -14,6 +14,11 @@ public class UserList {
         users = new ArrayList<>();
     }
 
+    /**
+     * login
+     * @param username the username
+     * @return true or false
+     */
     public boolean connectUser(String username){
         User u = new User(username);
         int index = users.indexOf(u);
