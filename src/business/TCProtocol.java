@@ -3,6 +3,7 @@ package business;
 public class TCProtocol {
     public static final int PORT = 1234;
     public static final String DELIMITER = "%%";
+    public static final String SPLITTER = "~~";
     public static final String HOST = "localhost";
     public static final String EXIT = "EXIT";
 
