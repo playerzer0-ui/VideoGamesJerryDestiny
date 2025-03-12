@@ -1,0 +1,13 @@
+USER%%jerry
+ORDER%%B%%pacman%%20
+ORDER%%B%%pacman%%40
+ORDER%%B%%pacman%%10
+CANCEL%%B%%pacman%%20
+
+USER%%bob
+ORDER%%B%%pacman%%20
+ORDER%%B%%pacman%%40
+ORDER%%B%%pacman%%10
+
+VIEW
+END
