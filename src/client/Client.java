@@ -50,7 +50,7 @@ public class Client {
                     String response = input.nextLine();
                     System.out.println("message recieved: " + response);
 
-                    if(response.equals(TCProtocol.EXIT)){
+                    if(response.equals(TCProtocol.ENDED)){
                         validSession = false;
                     }
                 }
