@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderList {
-    private List<Order> orders;
-
-    public OrderList(List<Order> orders) {
-        this.orders = orders;
-    }
+    private List<Order> buy;
+    private List<Order> sell;
 
     public OrderList() {
-        orders = new ArrayList<>();
+        buy = new ArrayList<>();
+        sell = new ArrayList<>();
     }
 
     /**
@@ -20,7 +18,12 @@ public class OrderList {
      * @return true/false
      */
     public boolean addOrder(Order order){
-        return orders.add(order);
+        if(order.getMode().equalsIgnoreCase("B")){
+            return buy.add(order);
+        }
+        else{
+            return sell.add(order);
+        }
     }
 
 
@@ -30,28 +33,30 @@ public class OrderList {
      * @return true/false
      */
     public boolean cancelOrder(Order order){
-        return orders.remove(order);
+        if(order.getMode().equalsIgnoreCase("B")){
+            return buy.remove(order);
+        }
+        else{
+            return sell.remove(order);
+        }
     }
 
     /**
-     * match an order from the list, a buy order will match the smaller price, a sell order will match the higher price
+     * match an order from the list, gets you the better deal when possible
      * @param order the Order class
      * @return the order/null if not found better match
      */
     public Order matchOrder(Order order) {
-        for (Order o : orders) {
-            if (o.getTitle().equals(order.getTitle()) &&
-                    o.getMode().equals(order.getMode())) {
-
-                if(order.getMode().equalsIgnoreCase("B")){
-                    if (o.getPrice() < order.getPrice()) {
-                        return o;
-                    }
+        if(order.getMode().equalsIgnoreCase("B")){
+            for (Order value : sell) {
+                if (order.getPrice() > value.getPrice()) {
+                    return value;
                 }
-                else{
-                    if (o.getPrice() > order.getPrice()) {
-                        return o;
-                    }
+            }
+        } else if (order.getMode().equalsIgnoreCase("S")) {
+            for (Order value : buy) {
+                if (order.getPrice() < value.getPrice()) {
+                    return value;
                 }
             }
         }
@@ -65,7 +70,15 @@ public class OrderList {
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
-        for (Order order : orders) {
+        for (Order order : buy) {
+            output.append(order.getMode())
+                    .append(TCProtocol.DELIMITER)
+                    .append(order.getTitle())
+                    .append(TCProtocol.DELIMITER)
+                    .append(order.getPrice())
+                    .append(TCProtocol.SPLITTER);
+        }
+        for (Order order : sell) {
             output.append(order.getMode())
                     .append(TCProtocol.DELIMITER)
                     .append(order.getTitle())
