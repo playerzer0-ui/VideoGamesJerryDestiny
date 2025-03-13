@@ -28,19 +28,28 @@ public class Client {
 
                     switch(choice){
                         case "1":
-
+                            System.out.print("Enter username: ");
+                            msg = TCProtocol.USER + TCProtocol.DELIMITER + sc.nextLine();
                             break;
                         case "2":
-
+                            System.out.print("(B)uy or (S)ell? ");
+                            String type = sc.nextLine().toUpperCase();
+                            System.out.print("Enter game title: ");
+                            String title = sc.nextLine();
+                            System.out.print("Enter price: ");
+                            String price = sc.nextLine();
+                            msg = TCProtocol.ORDER + TCProtocol.DELIMITER + type + TCProtocol.DELIMITER + title + TCProtocol.DELIMITER + price;
                             break;
                         case "3":
-
+                            System.out.print("Enter order details to cancel (B/S title price): ");
+                            msg = TCProtocol.CANCEL + TCProtocol.DELIMITER + sc.nextLine().replace(" ", TCProtocol.DELIMITER);
                             break;
                         case "4":
-
+                            msg = TCProtocol.VIEW;
                             break;
                         case "5":
-
+                            msg = TCProtocol.END;
+                            validSession = false;
                             break;
                     }
 
