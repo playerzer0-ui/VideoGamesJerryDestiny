@@ -66,11 +66,15 @@ public class OrderList {
     public String toString() {
         StringBuilder output = new StringBuilder();
         for (Order order : orders) {
-            output.append(order.toString())
+            output.append(order.getMode())
+                    .append(TCProtocol.DELIMITER)
+                    .append(order.getTitle())
+                    .append(TCProtocol.DELIMITER)
+                    .append(order.getPrice())
                     .append(TCProtocol.SPLITTER);
         }
 
-        // Remove the last "&&" if there are any orders
+        // Remove the last "~~" if there are any orders
         if (!output.isEmpty()) {
             output.setLength(output.length() - 2);
         }
