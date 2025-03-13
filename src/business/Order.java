@@ -1,17 +1,15 @@
 package business;
 
-import java.util.Objects;
-
 public class Order {
     private User user;
     private String title;
     private double price;
     private String mode;
 
-    public Order(User user, String mode, String title, double price) {
+    public Order(User user, String mode, double title, String price) {
         this.user = user;
-        this.title = title;
-        this.price = price;
+        this.title = String.valueOf(title);
+        this.price = Double.parseDouble(price);
         this.mode = mode;
     }
 
