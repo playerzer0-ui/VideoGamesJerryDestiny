@@ -6,10 +6,10 @@ public class Order {
     private double price;
     private String mode;
 
-    public Order(User user, String mode, double title, String price) {
+    public Order(User user, String mode, String title, double price) {
         this.user = user;
-        this.title = String.valueOf(title);
-        this.price = Double.parseDouble(price);
+        this.title = title;
+        this.price = price;
         this.mode = mode;
     }
 

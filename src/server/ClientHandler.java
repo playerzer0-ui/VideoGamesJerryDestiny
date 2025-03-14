@@ -7,9 +7,10 @@ import business.UserList;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
 
-class ClientHandler extends Thread {
+class ClientHandler implements Runnable {
     private final Socket socket;
     private final UserList userList;
     private final OrderList orderList;
@@ -30,6 +31,7 @@ class ClientHandler extends Thread {
             while (validSession && input.hasNextLine()) {
                 String request = input.nextLine();
                 String[] components = request.split(TCProtocol.DELIMITER);
+                System.out.println(Arrays.toString(components));
                 String response = TCProtocol.ERROR;
 
                 switch (components[0]) {
@@ -51,14 +53,14 @@ class ClientHandler extends Thread {
                             double price;
                             try {
                                 price = Double.parseDouble(components[3]);
-                                Order newOrder = new Order(currentUser, title, price, mode);
-                                Order matchedOrder = orderList.matchOrder(new Order(currentUser, title, price, mode));
+                                Order newOrder = new Order(currentUser, mode, title, price);
+                                Order matchedOrder = orderList.matchOrder(newOrder);
                                 if (matchedOrder != null) {
-                                    response = TCProtocol.MATCH + TCProtocol.DELIMITER + matchedOrder.toString();
+                                    response = TCProtocol.MATCH + TCProtocol.DELIMITER + matchedOrder;
                                     orderList.cancelOrder(matchedOrder); 
                                 } else {
-                                    orderList.addOrder(new Order(currentUser, title, price, mode));
-                                    response = TCProtocol.CONNECTED;
+                                    orderList.addOrder(new Order(currentUser, mode, title, price));
+                                    response = orderList.toString();
                                 }
                             } catch (NumberFormatException e) {
                                 throw new RuntimeException(e);
@@ -75,7 +77,7 @@ class ClientHandler extends Thread {
                             double price;
                             try {
                                 price = Double.parseDouble(components[3]);
-                                Order orderToRemove = new Order(currentUser, title, price, mode);
+                                Order orderToRemove = new Order(currentUser, mode, title, price);
                                 boolean cancelled = orderList.cancelOrder(orderToRemove);
                                 response = cancelled ? TCProtocol.CANCELLED : TCProtocol.NOT_FOUND;
                             } catch (NumberFormatException e) {

@@ -22,6 +22,6 @@ public class UserList {
     public boolean connectUser(String username){
         User u = new User(username);
         int index = users.indexOf(u);
-        return index < 0;
+        return index >= 0;
     }
 }
