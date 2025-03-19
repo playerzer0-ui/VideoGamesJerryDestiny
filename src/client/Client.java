@@ -91,7 +91,7 @@ public class Client {
                 break;
 
             case TCProtocol.MATCH:
-                System.out.println("match found with better price than yours!");
+                System.out.println("match found!");
                 System.out.println("-----------------------------------------");
                 System.out.println("mode: " + component[1]);
                 System.out.println("title: " + component[2]);

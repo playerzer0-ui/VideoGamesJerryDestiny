@@ -49,13 +49,13 @@ public class OrderList {
     public Order matchOrder(Order order) {
         if(order.getMode().equalsIgnoreCase("B")){
             for (Order value : sell) {
-                if (order.getPrice() > value.getPrice()) {
+                if (order.getPrice() > value.getPrice() && order.getUser() != value.getUser()) {
                     return value;
                 }
             }
         } else if (order.getMode().equalsIgnoreCase("S")) {
             for (Order value : buy) {
-                if (order.getPrice() < value.getPrice()) {
+                if (order.getPrice() < value.getPrice() && order.getUser() != value.getUser()) {
                     return value;
                 }
             }
